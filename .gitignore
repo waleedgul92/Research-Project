@@ -1,0 +1,11 @@
+dissertation_env/
+Dataset/
+*.csv
+*.zip
+Figures/
+*.png
+Models/
+.kaggle/
+__pycache__/
+*.pyc
+.vscode/
