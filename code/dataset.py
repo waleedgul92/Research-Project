@@ -5,7 +5,11 @@ import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-os.environ['KAGGLE_CONFIG_DIR'] = os.path.join(os.getcwd(), '.kaggle')
+PARENT_DIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
+DATASET_DIR = os.path.join(PARENT_DIR, 'Dataset')
+KAGGLE_DIR = os.path.join(PARENT_DIR, '.kaggle')
+
+os.environ['KAGGLE_CONFIG_DIR'] = KAGGLE_DIR
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_config():
@@ -18,11 +22,13 @@ def load_config():
 def download_dataset():
     """
     Authenticates with the Kaggle API, downloads the IEEE-CIS Fraud Detection 
-    dataset if not already present, and extracts it into the Dataset directory.
+    Dataset if not already present, and extracts it into the Dataset directory.
     """
-    if os.path.exists(os.path.join('../Dataset', 'train_transaction.csv')):
+    if os.path.exists(os.path.join(DATASET_DIR, 'train_transaction.csv')):
         logging.info("Dataset already downloaded and extracted. Skipping.")
         return
+        
+    os.makedirs(DATASET_DIR, exist_ok=True)
         
     from kaggle.api.kaggle_api_extended import KaggleApi
 
@@ -31,14 +37,16 @@ def download_dataset():
     api.authenticate()
 
     logging.info("Downloading IEEE-CIS Fraud Detection dataset (this may take a few minutes)...")
-    api.competition_download_files('ieee-fraud-detection', path='.')
+    api.competition_download_files('ieee-fraud-detection', path=DATASET_DIR)
+
+    zip_path = os.path.join(DATASET_DIR, 'ieee-fraud-detection.zip')
 
     logging.info("Extracting files into Dataset folder...")
-    with zipfile.ZipFile('ieee-fraud-detection.zip', 'r') as zip_ref:
-        zip_ref.extractall('Dataset')
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(DATASET_DIR)
 
     logging.info("Cleaning up zip file...")
-    os.remove('ieee-fraud-detection.zip')
+    os.remove(zip_path)
     
     logging.info("Download and extraction complete!")
 
@@ -50,8 +58,8 @@ def load_dataset():
     config = load_config()
     nrows_limit = config['nrows']
     
-    df_trans = pd.read_csv('../Dataset/train_transaction.csv', nrows=nrows_limit)
-    df_id = pd.read_csv('../Dataset/train_identity.csv')
+    df_trans = pd.read_csv(os.path.join(DATASET_DIR, 'train_transaction.csv'), nrows=nrows_limit)
+    df_id = pd.read_csv(os.path.join(DATASET_DIR, 'train_identity.csv'))
     
     logging.info(f"Transaction data shape: {df_trans.shape}")
     logging.info(f"Identity data shape: {df_id.shape}")
@@ -68,8 +76,8 @@ def load_dataset():
 #     nrows_limit = config['nrows']
     
 #     logging.info("Loading full transaction dataset to perform Random Undersampling...")
-#     df_trans_full = pd.read_csv('../Dataset/train_transaction.csv')
-#     df_id = pd.read_csv('../Dataset/train_identity.csv')
+#     df_trans_full = pd.read_csv(os.path.join(DATASET_DIR, 'train_transaction.csv'))
+#     df_id = pd.read_csv(os.path.join(DATASET_DIR, 'train_identity.csv'))
     
 #     fraud_cases = df_trans_full[df_trans_full['isFraud'] == 1]
 #     legit_cases = df_trans_full[df_trans_full['isFraud'] == 0]
