@@ -58,6 +58,36 @@ def load_dataset():
     
     return df_trans, df_id
 
+
+# def load_dataset_balanced():
+#     """
+#     Loads the full datasets and applies Random Undersampling (RUS) to balance 
+#     the classes before returning the specified number of rows.
+#     """
+#     config = load_config()
+#     nrows_limit = config['nrows']
+    
+#     logging.info("Loading full transaction dataset to perform Random Undersampling...")
+#     df_trans_full = pd.read_csv('../Dataset/train_transaction.csv')
+#     df_id = pd.read_csv('../Dataset/train_identity.csv')
+    
+#     fraud_cases = df_trans_full[df_trans_full['isFraud'] == 1]
+#     legit_cases = df_trans_full[df_trans_full['isFraud'] == 0]
+    
+#     n_fraud = min(len(fraud_cases), int(nrows_limit / 2))
+#     n_legit = nrows_limit - n_fraud
+    
+#     fraud_sampled = fraud_cases.sample(n=n_fraud, random_state=42)
+#     legit_sampled = legit_cases.sample(n=n_legit, random_state=42)
+    
+#     df_trans = pd.concat([fraud_sampled, legit_sampled]).sample(frac=1, random_state=42).reset_index(drop=True)
+    
+#     logging.info(f"Transaction data shape after RUS: {df_trans.shape}")
+#     logging.info(f"Identity data shape: {df_id.shape}")
+#     logging.info(f"Fraud ratio in sampled data: {df_trans['isFraud'].mean():.4f}")
+    
+#     return df_trans, df_id
+
 def process_data(df_trans, df_id):
     """
     Merges transaction and identity dataframes, isolates the target variable, 

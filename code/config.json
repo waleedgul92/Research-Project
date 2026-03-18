@@ -1,5 +1,5 @@
 {
-    "nrows": 50000,
+    "nrows": 50000, 
     "drop_threshold": 70.0,
     "xgb_n_estimators": 100,
     "xgb_max_depth": 6,
