@@ -9,5 +9,7 @@
     "xgb_colsample_bytree": 0.8,
     "xgb_min_child_weight": 1,
     "cv_splits": 5,
-    "fl_num_nodes": 3
+    "fl_num_nodes": 3,
+    "dp_epsilon": 1.0,
+    "dp_clip_threshold": 0.5
 }
