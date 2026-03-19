@@ -1,8 +1,13 @@
 {
     "nrows": 50000, 
     "drop_threshold": 70.0,
-    "xgb_n_estimators": 100,
-    "xgb_max_depth": 6,
-    "xgb_learning_rate": 0.1,
-    "cv_splits": 5
+    "top_k_features": 40,
+    "xgb_n_estimators": 900,
+    "xgb_max_depth": 4,
+    "xgb_learning_rate": 0.15,
+    "xgb_subsample": 0.8,
+    "xgb_colsample_bytree": 0.8,
+    "xgb_min_child_weight": 1,
+    "cv_splits": 5,
+    "fl_num_nodes": 3
 }

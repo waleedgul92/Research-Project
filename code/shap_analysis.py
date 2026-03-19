@@ -29,8 +29,8 @@ def generate_shap_plots(model_path, X_test):
 
 if __name__ == "__main__":
     df_trans, df_id = load_dataset()
-    X_train_raw, X_test_raw, _, _ = process_data(df_trans, df_id)
+    X_train_raw, X_test_raw, y_train, _ = process_data(df_trans, df_id)
     
-    _, X_test = preprocess_features(X_train_raw, X_test_raw)
+    _, X_test = preprocess_features(X_train_raw, X_test_raw, y_train)
     
     generate_shap_plots('../Models/baseline_xgboost.json', X_test)
