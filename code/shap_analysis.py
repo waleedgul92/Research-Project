@@ -2,6 +2,7 @@ import logging
 import xgboost as xgb
 import shap
 import matplotlib.pyplot as plt
+import numpy as np
 from dataset import load_dataset, process_data
 from preprocess import preprocess_features
 
@@ -17,6 +18,9 @@ def generate_shap_plots(model_path, X_test):
     logging.info("Initializing TreeSHAP and calculating values...")
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X_test_sample)
+    
+    np.save('../Models/shap_baseline.npy', shap_values)
+    logging.info("Baseline SHAP matrix saved to ../Models/shap_baseline.npy")
     
     logging.info("Generating SHAP summary plot...")
     plt.figure(figsize=(10, 8))
