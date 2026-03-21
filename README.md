@@ -6,14 +6,26 @@
 
 ## Repository Structure
 
-| File | Description |
+| Directory / File | Description |
 |---|---|
-| `code/config.json` | Centralized hyperparameters and data thresholds |
-| `code/dataset.py` | Handles secure Kaggle API data downloading and memory-safe train/test splitting |
-| `code/eda.py` | Generates domain-specific exploratory data visualizations |
-| `code/preprocess.py` | Applies Missing Not At Random (MNAR) thresholds and label encoding |
-| `code/model.py` | Trains the XGBoost model using Stratified 5-Fold Cross-Validation and Cost-Sensitive Learning |
-| `code/shap_analysis.py` | Extracts global feature importance using the TreeSHAP algorithm |
+| **`data_pipeline/`** | **Data Engineering Engine** |
+| ├── `dataset.py` | Handles secure Kaggle API downloads and memory-safe train/test splitting. |
+| ├── `preprocess.py` | Applies MNAR thresholds, label encoding, and feature selection. |
+| ├── `eda.py` | Generates domain-specific exploratory data visualizations. |
+| └── `fl_data_splitter.py`| Partitions data into IID slices for Federated bank nodes. |
+| **`federated_core/`** | **Model & Network Engine** |
+| ├── `model.py` | Optimized XGBoost training via Stratified 5-Fold Cross-Validation. |
+| ├── `fl_client.py` | Standard logic for isolated local bank node training. |
+| ├── `dp_fed_client.py` | Injects Laplacian noise into local SHAP matrices ($\epsilon$-DP). |
+| └── `fl_server.py` | Central server aggregation for global ensemble evaluation and XAI. |
+| **`evaluation/`** | **Security & Utility Metrics** |
+| ├── `compare_all_xai.py` | Calculates MAE, Top-10 Overlap, and Spearman Rank for utility. |
+| └── `membership_inference.py`| Executes the Random Forest Membership Inference Attack (MIA). |
+| **`Execution Scripts`** | **Master Controls (Root Directory)** |
+| ├── `config.json` | Centralized hyperparameters, privacy budgets ($\epsilon$), and dataset limits. |
+| ├── `run_baseline.py` | Trains centralized model and extracts ground-truth SHAP values. |
+| ├── `run_federated.py` | Simulates standard Federated Learning across nodes. |
+| └── `run_dp_federated.py`| Simulates Privacy-Preserving Federated Learning with DP. |
 
 ---
 
