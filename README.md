@@ -6,16 +6,6 @@
 
 ## Repository Structure
 
-# Privacy-Preserving Federated Learning & Explainable AI (XAI)
-
-This repository contains the experimental codebase for evaluating the privacy-utility trade-off in Machine Learning. It implements a centralized XGBoost baseline, a Horizontal Federated Learning (FL) architecture, and a Differential Privacy (DP) shield, evaluated against a Membership Inference Attack (MIA).
-
----
-
-## 📁 Repository Structure
-
-The codebase has been refactored into a modular, production-ready MLOps pipeline.
-
 | Directory / File | Description |
 |---|---|
 | **`data_pipeline/`** | **Data Engineering Engine** |
@@ -38,7 +28,6 @@ The codebase has been refactored into a modular, production-ready MLOps pipeline
 | └── `run_dp_federated.py`| Simulates Privacy-Preserving Federated Learning with DP. |
 
 ---
-
 
 ## Prerequisites & Environment Setup
 
