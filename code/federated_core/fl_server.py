@@ -24,30 +24,39 @@ def evaluate_federated_ensemble(models, X_test, y_test):
     
     return global_auprc
 
-def extract_federated_shap(models, X_test):
+def extract_federated_shap(models, X_test, X_train):
     logging.info("Central Server: Initiating Global Federated XAI Extraction...")
     
     X_test_sample = X_test.sample(n=2000, random_state=42)
-    all_shap_values = []
+    X_train_sample = X_train.sample(n=2000, random_state=42)
+    
+    all_test_shap_values = []
+    all_train_shap_values = []
     
     for i, model in enumerate(models):
         logging.info(f"Calculating Shapley values for Bank Node {i+1}...")
         explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(X_test_sample)
-        all_shap_values.append(shap_values)
+        
+        test_shap_values = explainer.shap_values(X_test_sample)
+        all_test_shap_values.append(test_shap_values)
+        
+        train_shap_values = explainer.shap_values(X_train_sample)
+        all_train_shap_values.append(train_shap_values)
         
     logging.info("Averaging local Shapley matrices into Global Explanations...")
-    global_shap_values = np.mean(all_shap_values, axis=0)
+    global_test_shap_values = np.mean(all_test_shap_values, axis=0)
+    global_train_shap_values = np.mean(all_train_shap_values, axis=0)
     
     os.makedirs('../Models', exist_ok=True)
-    np.save('../Models/shap_federated.npy', global_shap_values)
-    logging.info("Federated SHAP matrix saved to ../Models/shap_federated.npy")
+    np.save('../Models/shap_federated.npy', global_test_shap_values)
+    np.save('../Models/train_shap_federated.npy', global_train_shap_values)
+    logging.info("Federated SHAP matrices saved to ../Models/")
     
     os.makedirs('../Figures', exist_ok=True)
     
     logging.info("Rendering Federated SHAP Beeswarm Plot...")
     plt.figure(figsize=(12, 8))
-    shap.summary_plot(global_shap_values, X_test_sample, show=False)
+    shap.summary_plot(global_test_shap_values, X_test_sample, show=False)
     plt.title("Federated Learning Global SHAP Summary (Ensemble)")
     plt.tight_layout()
     plt.savefig('../Figures/shap_summary_federated.png')

@@ -1,10 +1,10 @@
 import os
 import logging
-from dataset import load_dataset, process_data, load_config
-from preprocess import preprocess_features
-from fl_data_splitter import create_iid_partitions
-from fl_client import train_local_model
-from fl_server import evaluate_federated_ensemble, extract_federated_shap
+from data_pipeline.dataset import load_dataset, process_data, load_config
+from data_pipeline.preprocess import preprocess_features
+from data_pipeline.fl_data_splitter import create_iid_partitions
+from federated_core.fl_client import train_local_model
+from federated_core.fl_server import evaluate_federated_ensemble, extract_federated_shap
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -34,7 +34,8 @@ def run_federated_simulation():
         federated_models.append(model)
         
     evaluate_federated_ensemble(federated_models, X_test, y_test)
-    extract_federated_shap(federated_models, X_test)
+    
+    extract_federated_shap(federated_models, X_test, X_train)
     
     logging.info("--- FEDERATED LEARNING SIMULATION SUCCESSFULLY COMPLETED ---")
 

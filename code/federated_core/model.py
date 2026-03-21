@@ -3,8 +3,8 @@ import logging
 import xgboost as xgb
 from sklearn.model_selection import StratifiedKFold, cross_val_score
 import numpy as np
-from dataset import load_dataset, process_data, load_config
-from preprocess import preprocess_features
+from data_pipeline.dataset import load_dataset, process_data, load_config
+from data_pipeline.preprocess import preprocess_features
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

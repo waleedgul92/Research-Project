@@ -1,6 +1,6 @@
 import logging
 import xgboost as xgb
-from dataset import load_config
+from data_pipeline.dataset import load_config
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

@@ -5,17 +5,26 @@ import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-PARENT_DIR = os.path.abspath(os.path.join(os.getcwd(), '..'))
-DATASET_DIR = os.path.join(PARENT_DIR, 'Dataset')
-KAGGLE_DIR = os.path.join(PARENT_DIR, '.kaggle')
+# 1. This gets exactly: /mnt/f/Research-Project/code/data_pipeline
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 2. This steps back TWICE to reach the main: /mnt/f/Research-Project
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..'))
+
+# 3. Now we join the exact folder names (No dots!)
+DATASET_DIR = os.path.join(PROJECT_ROOT, 'Dataset')
+KAGGLE_DIR = os.path.join(PROJECT_ROOT, 'kaggle')
 
 os.environ['KAGGLE_CONFIG_DIR'] = KAGGLE_DIR
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_config():
-    with open('config.json', 'r') as f:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(current_dir, '..'))
+    config_path = os.path.join(project_root, 'config.json')
+    
+    with open(config_path, 'r') as f:
         return json.load(f)
-
 def download_dataset():
     if os.path.exists(os.path.join(DATASET_DIR, 'train_transaction.csv')):
         logging.info(f"Dataset already exists at {DATASET_DIR}. Skipping download.")

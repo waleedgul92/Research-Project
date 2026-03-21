@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import xgboost as xgb
 from sklearn.preprocessing import LabelEncoder
-from dataset import load_dataset, process_data, load_config
+from data_pipeline.dataset import load_dataset, process_data, load_config
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

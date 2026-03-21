@@ -14,8 +14,11 @@ from dataset import load_dataset
 warnings.simplefilter("ignore")
 plt.style.use('ggplot')
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+FIGURES_DIR = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..','Figures'))
+
 def setup_directories():
-    os.makedirs('../Figures', exist_ok=True)
+    os.makedirs(FIGURES_DIR, exist_ok=True)
 
 def plot_missing_data(df):
     data_null = (df.isnull().sum() / len(df)) * 100
@@ -28,7 +31,7 @@ def plot_missing_data(df):
     plt.ylabel('Missing Rate (%)', fontsize=14)
     plt.xlabel('Features', fontsize=14)
     plt.tight_layout()
-    plt.savefig('../Figures/1_missing_data_rates.png')
+    plt.savefig(os.path.join(FIGURES_DIR, '1_missing_data_rates.png'))
     plt.close()
 
 def plot_train_test_time_split(train, test):
@@ -40,7 +43,7 @@ def plot_train_test_time_split(train, test):
     plt.xlabel('TransactionDT (Time Delta)')
     plt.ylabel('Count')
     plt.tight_layout()
-    plt.savefig('../Figures/2_time_split.png')
+    plt.savefig(os.path.join(FIGURES_DIR, '2_time_split.png'))
     plt.close()
 
 def plot_class_imbalance(df):
@@ -50,7 +53,7 @@ def plot_class_imbalance(df):
     plt.yscale('log')
     plt.ylabel('Count (Log Scale)')
     plt.tight_layout()
-    plt.savefig('../Figures/3_class_imbalance.png')
+    plt.savefig(os.path.join(FIGURES_DIR, '3_class_imbalance.png'))
     plt.close()
 
 def plot_transaction_amt_boxplot(df):
@@ -60,7 +63,7 @@ def plot_transaction_amt_boxplot(df):
     plt.title('Transaction Amount by Fraud Status (Log Scale)')
     plt.ylabel('Transaction Amount (Log Scale)')
     plt.tight_layout()
-    plt.savefig('../Figures/4_transaction_amt_boxplot.png')
+    plt.savefig(os.path.join(FIGURES_DIR, '4_transaction_amt_boxplot.png'))
     plt.close()
 
 def plot_categorical_stacked_bar(df, col_name='ProductCD'):
@@ -71,7 +74,7 @@ def plot_categorical_stacked_bar(df, col_name='ProductCD'):
         plt.ylabel('Number of Transactions')
         plt.xticks(rotation=0)
         plt.tight_layout()
-        plt.savefig(f'../Figures/5_{col_name}_vs_fraud.png')
+        plt.savefig(os.path.join(FIGURES_DIR, f'5_{col_name}_vs_fraud.png'))
         plt.close()
 
 def plot_altair_high_cardinality(df, col_name, top_n=40):
@@ -124,7 +127,7 @@ def plot_dimensionality_reduction_clusters(X_train, y_train, n_components=2, sam
 
     plt.tight_layout()
     plt.subplots_adjust(top=0.90)
-    plt.savefig('../Figures/6_dimensionality_reduction_clusters.png')
+    plt.savefig(os.path.join(FIGURES_DIR, '6_dimensionality_reduction_clusters.png'))
     plt.close()
     print("Dimensionality reduction plots saved.")
 
