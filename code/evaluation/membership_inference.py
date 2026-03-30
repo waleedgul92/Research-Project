@@ -1,7 +1,7 @@
 import os
 import logging
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+import xgboost as xgb
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
@@ -17,15 +17,34 @@ def run_membership_inference(scenario_name, train_shap_path, test_shap_path):
     train_shap = np.load(train_shap_path)
     test_shap = np.load(test_shap_path)
 
-    train_labels = np.ones(train_shap.shape[0])
-    test_labels = np.zeros(test_shap.shape[0])
+    train_norms = np.linalg.norm(train_shap, axis=1, keepdims=True)
+    test_norms = np.linalg.norm(test_shap, axis=1, keepdims=True)
+    
+    train_var = np.var(train_shap, axis=1, keepdims=True)
+    test_var = np.var(test_shap, axis=1, keepdims=True)
+    
+    train_max = np.max(np.abs(train_shap), axis=1, keepdims=True)
+    test_max = np.max(np.abs(test_shap), axis=1, keepdims=True)
 
-    X = np.vstack((train_shap, test_shap))
+    train_features = np.hstack((train_shap, train_norms, train_var, train_max))
+    test_features = np.hstack((test_shap, test_norms, test_var, test_max))
+
+    train_labels = np.ones(train_features.shape[0])
+    test_labels = np.zeros(test_features.shape[0])
+
+    X = np.vstack((train_features, test_features))
     y = np.concatenate((train_labels, test_labels))
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
 
-    attack_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    attack_model = xgb.XGBClassifier(
+        n_estimators=200,
+        max_depth=6,
+        learning_rate=0.1,
+        random_state=42,
+        n_jobs=-1,
+        eval_metric='logloss'
+    )
     attack_model.fit(X_train, y_train)
 
     predictions = attack_model.predict(X_test)
@@ -40,13 +59,11 @@ if __name__ == "__main__":
         os.path.join(MODELS_DIR, "train_shap_baseline.npy"),
         os.path.join(MODELS_DIR, "shap_baseline.npy")
     )
-    
     run_membership_inference(
         "Standard Federated Learning",
         os.path.join(MODELS_DIR, "train_shap_federated.npy"),
         os.path.join(MODELS_DIR, "shap_federated.npy")
     )
-    
     run_membership_inference(
         "Differential Privacy FL",
         os.path.join(MODELS_DIR, "train_shap_differential_privacy.npy"),
