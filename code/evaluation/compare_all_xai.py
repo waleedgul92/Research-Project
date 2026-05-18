@@ -2,7 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import spearmanr
 from sklearn.metrics import mean_absolute_error
+import os
 
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, '..' , '..'))
+MODELS_DIR = os.path.join(PROJECT_ROOT, 'Models')
+Figure_DIR = os.path.join(PROJECT_ROOT, 'Figures')
 def calculate_metrics(base_shap, comp_shap, features, top_k=10):
     imp_base = np.abs(base_shap).mean(axis=0)
     imp_comp = np.abs(comp_shap).mean(axis=0)
@@ -28,9 +33,9 @@ def calculate_metrics(base_shap, comp_shap, features, top_k=10):
 def run_master_comparison():
     features = [f"Feature_{i}" for i in range(40)]
     
-    shap_base = np.load('../Models/shap_baseline.npy')
-    shap_fl = np.load('../Models/shap_federated.npy')
-    shap_dp = np.load('../Models/shap_differential_privacy.npy')
+    shap_base = np.load(os.path.join(MODELS_DIR, 'shap_baseline.npy'))  
+    shap_fl = np.load(os.path.join(MODELS_DIR, 'shap_federated.npy'))
+    shap_dp = np.load(os.path.join(MODELS_DIR, 'shap_differential_privacy.npy'))
 
     overlap_base, rho_base, mae_base, base_sorted, base_dict, _ = calculate_metrics(shap_base, shap_base, features)
     overlap_fl, rho_fl, mae_fl, _, _, fl_dict = calculate_metrics(shap_base, shap_fl, features)
@@ -75,7 +80,7 @@ def run_master_comparison():
     plt.xticks(x, top_10_features, rotation=45)
     plt.legend()
     plt.tight_layout()
-    plt.savefig('../Figures/7_xai_degradation_comparison.png')
+    plt.savefig(os.path.join(Figure_DIR, '7_xai_degradation_comparison.png'))
     plt.close()
 
 if __name__ == "__main__":
