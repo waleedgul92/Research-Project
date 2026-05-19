@@ -1,4 +1,4 @@
-# Research-Project
+# Research-Project-Mitigating Explanation Leakage in Financial Fraud Detection Systems
 
 
 - This repository contains the centralized machine learning baseline for a Master's dissertation 
